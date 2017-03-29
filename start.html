@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+
+<title>Start Alarm Page</title>
+
+
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+<link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Comfortaa:400,300,700' rel='stylesheet' type='text/css'>
+
+<script src="js/postfixer.js"></script>
+
+</head> 
+<body>
+<!-- header -->
+	<div class="header">
+		<div class="container">
+			<div class="header-nav">
+				<nav class="navbar navbar-default">
+					<div class="collapse navbar-collapse nav-wil" id="bs-example-navbar-collapse-1">
+					 <ul class="nav navbar-nav">
+						<li><a href="modes.html">Modes</a></li>
+            <li><a href="class_schedule.html">Class Schedule</a></li>
+            <li><a href="charts.html">Charts</a></li>
+            <li><a href="advice.html">Advice</a></li>
+            <li><a href="about.html">About</a></li>
+					 </ul>
+					</div>
+				</nav>
+			</div>
+		</div>
+	</div>
+<!-- //header -->
+
+
+
+<!-- Start -->
+<div class="title">Alarm</div>
+<p class="title" id="week" style="font-size: 130%; margin: auto;white-space: nowrap;">Your wake up time for tomorrow</p>
+<script type="text/javascript">
+  var tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+  var options = {year: "numeric", month: "long", day: "numeric"};
+  var dateString = tomorrow.toLocaleDateString("en-us",options);
+  dateString = dateString.substring(0, dateString.indexOf(',')) + "<sup>"+postfix(tomorrow.getDate())+"</sup>" + dateString.substring(dateString.indexOf(','));
+  var week = document.getElementById("week");
+  var cur = week.innerHTML;
+  cur += ", "+dateString + ":";
+  week.innerHTML = cur;
+ </script>
+
+ <!-- Alarm part -->
+<div class="wake_up_time"> 8:30 </div>
+<div style="margin-left: 10%;">
+<form class="form-inline">
+<table id="caffeine-table">
+<thead>
+  <tr id="caffeine-table-header">
+    <th>Dose(s)</th>
+    <th>Of</th>
+    <th>caffeine per dose (mg)</th>
+    <th>Taken At</th>
+  </tr>
+</thead>
+<tbody id="caffeine-table-body">
+<tr id="deleteMe"><!-- This element only added because otherwise the tbody gets deleted, and is dropped once a real row is added. --></tr>
+</tbody>
+</table>
+</form>
+
+<button onclick="addNewRow()" id="caffeine-newrow">+</button>
+<p id="caffeine-output-line">As of right now, you have the equivalent of <span id="caffeine-output">0</span> milligrams of caffeine in your body.</p>
+</div>
+<input type="hidden" name="caffeine-last-amount" id="caffeine-last-amount" value="0">
+<input type="hidden" name="caffeine-last-time" id="caffeine-last-time" value="0"> <!-- Stored in Unix time -->
+<br>
+
+<div id="countdown"></div>
+
+<script>
+var targetDate = new Date();
+var now=targetDate.getTime();
+targetDate.setHours(8);
+targetDate.setMinutes(30);
+targetDate.setSeconds(0);
+targetDate.setMilliseconds(0);
+var countDownDate=targetDate.getTime();
+if (now>=countDownDate) { // If we are at or beyond the alarm time, work towards tomorrow
+// TODO: Add alarm trigger here
+  countDownDate+=24*60*60*1000;
+}
+
+var x = setInterval(function() {
+
+  var now = new Date().getTime();
+
+  var distance = countDownDate - now;
+
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  document.getElementById("countdown").innerHTML = "Sleep time remaining: " + hours + "h "
+  + minutes + "m " + seconds + "s ";
+
+  if (distance < 0) {
+    clearInterval(x);
+    document.getElementById("countdown").innerHTML = "WAKE UP";
+  }
+}, 1);
+</script>
+
+<table style="display:none">
+<!-- The contents of the following element are used by the script to spawn new table rows. Modify it to modify all table rows as they are added. -->
+<tbody id="caffeine-table-template-row-container">
+  <tr class="caffeine-table-row form-inline">
+    <td class="caffeine-table-dose">
+      <input type="number" class="form-control" min="1" max="10" value="1" name="caffeine-quantity" onchange="handleUpdates(this)">
+    </td>
+    <td class="caffeine-table-type">
+      <select class="form-control" name="caffeine-type" onchange="updateStrength(this)">
+        <option value="coffee" selected>coffee</option> <!-- 150mg per cup -->
+        <option value="tea-black">black tea</option> <!-- 50mg per cup -->
+        <option value="tea-green">green tea</option> <!-- 25mg per cup --> 
+        <option value="coke">Coke</option> <!-- 35mg per can -->
+        <option value="input">something else</option> <!-- Let the user input the dosage -->
+        <!-- Herbal teas, not being actual teas, have no caffeine. -->
+      </select>
+    </td>
+    <td class="caffeine-table-strength">
+      <input type="number" class="form-control" min="0" max="1000" value="150" step="5" name="caffeine-strength" disabled onchange="handleUpdates(this)">
+    </td>
+    <td class="caffeine-table-time">
+      <input type="time" class="form-control" value="08:00" name="caffeine-time" onchange="handleUpdates(this)">
+    </td>
+  </tr>
+</tbody>
+</table>
+
+<!-- // Start -->
+
+<!-- <button style="margin-left: 40%;" type="button" class="btn btn-default btn-lg" onclick="location.href='modes.html'">
+  <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Return to Modes
+</button>
+ -->
+
+<div style="display: inline;">
+  <button style="margin-left: 20%;" type="button" class="btn btn-default btn-lg" onclick="location.href='modes.html'">
+  <!-- <span class="glyphicon glyphicon-play" aria-hidden="true"></span>  -->Return to Modes
+</button>
+
+<button type="button" style="margin-left: 10%;" class="btn btn-default btn-lg" onclick="location.href='charts.html'">
+  <!-- <span class="glyphicon glyphicon-play" aria-hidden="true"></span> --> View Charts
+</button>
+<button type="button" style="margin-left: 10%;" class="btn btn-default btn-lg" onclick="location.href='advice.html'">
+  <!-- <span class="glyphicon glyphicon-play" aria-hidden="true"></span> --> See Advices
+</button>
+</div>
+<script src="js/caffeine-calculating.js"></script>
+<script src="js/bootstrap.min.js"></script>
+
+</body>
+</html>

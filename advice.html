@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+
+<title>Sleep Advice</title>
+
+
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+<link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+<link href="css/modal.css" rel="stylesheet" type="text/css" media="all" />
+
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Comfortaa:400,300,700' rel='stylesheet' type='text/css'>
+
+<noscript>
+  <style>
+  .js-only {display:none}
+  .no-js {display:block !important}
+  </style>
+</noscript>
+
+<script src="js/postfixer.js"></script>
+
+</head> 
+<body>
+<!-- header -->
+	<div class="header">
+		<div class="container">
+			<div class="header-nav">
+				<nav class="navbar navbar-default">
+					<div class="collapse navbar-collapse nav-wil" id="bs-example-navbar-collapse-1">
+					 <ul class="nav navbar-nav">
+						<li><a href="modes.html">Modes</a></li>
+            <li><a href="class_schedule.html">Class Schedule</a></li>
+            <li><a href="charts.html">Charts</a></li>
+            <li><a href="advice.html">Advice</a></li>
+            <li><a href="about.html">About</a></li>
+					 </ul>
+					</div>
+				</nav>
+			</div>
+		</div>
+	</div>
+<!-- //header -->
+
+<div class="title">Sleep Advice</div>
+
+<p class="title js-only" id="week" style="font-size: 100%; margin: auto;white-space: nowrap;">Your sleep advice for </p>
+<p class="title no-js" id="weekScriptless" style="font-size: 100%; margin:auto; white-space: nowrap; display:none">Your sleep advice for today:</p>
+<script type="text/javascript">
+  var today = new Date();
+  var options = {year: "numeric", month: "long", day: "numeric"};
+  var dateString = today.toLocaleDateString("en-us",options);
+  dateString = dateString.substring(0, dateString.indexOf(',')) + "<sup>"+postfix(today.getDate())+"</sup>" + dateString.substring(dateString.indexOf(','));
+  var week = document.getElementById("week");
+  var cur = week.innerHTML;
+  cur += dateString + ":";
+  week.innerHTML = cur;
+ </script>
+ 
+ <div id="caffeine-advising" class="container advising form-inline">
+  <p>Based on your sleep history, SLEEP recommends having no more than 65 mg of caffeine in your body at bedtime.</p>
+  <div class="js-only">
+    That means no more than
+    <input type="number" class="form-control" min="1" max="10" value="1" name="caffeine-quantity" id="caffeine-quantity">
+    <span id="caffeine-units">cup(s)</span> of 
+    <select class="form-control" name="caffeine-type" id="caffeine-type">
+      <option value="coffee" selected>coffee</option> <!-- 150mg per cup -->
+      <option value="tea-black">black tea</option> <!-- 50mg per cup -->
+      <option value="tea-green">green tea</option> <!-- 25mg per cup --> 
+      <option value="coke">Coke</option> <!-- 35mg per can -->
+      <option value="input">something else</option> <!-- Let the user input the dosage -->
+      <!-- Herbal teas, not being actual teas, have no caffeine. -->
+    </select>,
+    <span id="caffeine-input" style="display:none"> <!-- Displayed only when "something else" is selected, for the user to input dosage -->
+      which has 
+      <input type="number" class="form-control" min="0" max="800" value="100" step="10" name="caffeine-dose" id="caffeine-dose"> 
+      milligrams of caffeine per dose,
+    </span>
+    <input type="number" class="form-control" min="1" max="18" value="7" step="0.5" name="caffeine-time" id="caffeine-time">
+    hours before bed.
+ </div>
+ <div class="no-js">
+  That means no more than 1 cup of coffee 7 hours before bed, 2 cups of black tea 3.5 hours before bed, 3 cups of green tea 1 hour before bed, or 2 cans of Coke 0.5 hours before bed.
+ </div>
+ 
+ <script src="js/caffeine-advising.js"></script>
+</body>
+</html>
